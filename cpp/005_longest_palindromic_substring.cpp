@@ -50,3 +50,57 @@ public:
         return s.substr(start, length);
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int size = s.size();
+        if (s.size() <= 1)
+            return s;
+        
+        int max_length = 1;
+        int max_start = 0;
+        // the center point is i
+        for (int i = 0; i < size; i++) {
+            // for two cases,  x i x   or  x x
+            for (int shift = 0; shift <= 1; shift++) {      
+                int left = i - shift;
+                int right = i + 1;
+                int length = shift;
+                int start = i;
+                // expand left and right to max
+                while (left >= 0 && right < size && s[left] == s[right]) {
+                    length += 2;
+                    start = left;
+                    left--;
+                    right++;
+                }
+                if (length > max_length) {
+                    max_length = length;
+                    max_start = start;
+                }
+            }
+        }
+        
+        return s.substr(max_start, max_length);
+    }
+};
