@@ -37,3 +37,42 @@ public:
         return false;
     }
 };
+
+
+
+
+
+
+
+
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        // memorize if string[start, end] could be construct using words in dict.
+        // -1 means not calculated.
+        vector<bool> dp(s.size() + 1, false);
+        dp.at(0) = true;
+        
+        // convert list of words into hashmap for O(1) time look-up.
+        unordered_map<string, bool> dict;
+        for (string &s : wordDict) {
+            dict[s] = true;
+        }
+
+        for (int i = 1; i <= s.size(); i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (dp[j] && dict.count(s.substr(j, i - j)) > 0) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        
+        return dp[s.size()];
+        
+    }
+
+    
+
+};
