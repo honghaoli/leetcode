@@ -44,3 +44,51 @@ private:
         cout << endl;
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// more concise solution
+// swap num with nums[num - 1]
+// put each number at its position
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        // swap id to nums[id - 1];
+        for (int i = 0; i < nums.size(); i++) {
+            while (nums[i] > 0 && nums[i] <= nums.size() && nums[nums[i] - 1] != nums[i]) {
+                swap(i, nums);
+            }
+        }
+        
+        // find the first num != nums[num - 1];
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] - 1 != i)
+                return i + 1;
+        }
+        
+        // if all the numbers exist, then return the next number larger than all of them.
+        return nums.size() + 1;
+    }
+
+private:
+    void swap(int i, vector<int> &nums) {
+        int id = nums[i];
+        nums[i] = nums[id - 1];
+        nums[id - 1] = id;
+    }
+    
+};
