@@ -28,3 +28,46 @@ public:
         return area;
     }
 };
+
+
+
+
+
+
+
+class Solution {
+public:
+    // solution 1
+    // remember the highest from 0 to i-1 as high[i];
+    // reversely, remember the higest from i+1 to n as high_rev[i];
+    // go through all the site, when the site < high and high_rev, add the difference.
+    //
+    // solution 2
+    // we dont need the extra O(n) space, just remember the highest.
+    int trap(vector<int>& height) {
+        int s = height.size();
+        if (s < 3) return 0;
+        
+        int area = 0;
+        int left = 0, right = s - 1;
+        int max_left = height[left], max_right = height[right];
+        
+        while (left < right) {
+            if (max_right > max_left) {
+                left++;
+                if (height[left] < max_left)
+                    area += max_left - height[left];
+                else
+                    max_left = height[left];
+            } else {
+                right--;
+                if (height[right] < max_right)
+                    area += max_right - height[right];
+                else
+                    max_right = height[right];
+            }
+        }
+
+        return area;
+    }
+};
