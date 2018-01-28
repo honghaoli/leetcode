@@ -108,6 +108,53 @@ private:
 
 
 
+// second method.
+// inspire by the discussion on leetcode
+class Solution {
+public:
+    bool isNumber(string s) {
+        int i = 0, j = s.size() - 1;
+        // trim the string first
+        for (; i <= j && s[i] == ' '; i++);
+        for (; i <= j && s[j] == ' '; j--);
+        if (j < i) return false;        // nothing left
+        //
+        bool foundDigit = false;
+        bool foundDot = false;
+        bool foundExp = false;
+        //
+        for (int k = i; k <= j; k++) {
+            if (s[k] >= '0' && s[k] <= '9') {
+                foundDigit = true;
+            } else if (s[k] == 'e') {
+                if (foundExp) 
+                    return false;     // more than one 'e'
+                else {
+                    if (!foundDigit) return false;      // must have number before 'e'.
+                    foundExp = true;
+                    foundDigit = false;
+                }
+            } else if (s[k] == '.') {
+                if (foundDot || foundExp)
+                    return false;       // more than one '.', or '.' after 'e'
+                else {
+                    foundDot = true;                         
+                }
+            } else if (s[k] == '+' || s[k] == '-') {
+                if (k != i && s[k - 1] != 'e')
+                    return false;       // +- can only be the first or the one after 'e'
+            } else {
+                // not valid symbol
+                return false;
+            }
+        }
+        
+        return foundDigit;
+    }
+};
+
+
+
 
 
 
@@ -115,6 +162,7 @@ private:
 
 /* Some test Cases
 
+    "e9"
     "46.e3"
     " -."
     "123",
