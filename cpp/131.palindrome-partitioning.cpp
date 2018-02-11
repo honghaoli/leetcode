@@ -29,15 +29,11 @@ private:
     
     
     bool isPalindrome(string &s, int start, int end) {
-        while (start < end) {
-            if (s[start] == s[end]) {
+        while (start < end && s[start] == s[end]) {
                 start++;
                 end--;
-            } else {
-                return false;
-            }
         }
-        return true;
+        return start >= end;
     }
 };
 
