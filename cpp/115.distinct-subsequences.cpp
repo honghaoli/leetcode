@@ -26,3 +26,25 @@ public:
         return dp[nt - 1][ns - 1]; 
     }
 };
+
+
+
+// save space, O(n) space
+class Solution {
+public:
+    int numDistinct(string s, string t) {
+        int ns = s.size(), nt = t.size();
+        if (ns < nt) return 0;
+        vector<int> dp(nt, 0);
+        
+        for (int j = 0; j < ns; j++) {
+            for (int i = min(nt - 1, j); i >= 0; i--) {
+                if (t[i] == s[j]) {
+                    dp[i] += (i > 0 ? dp[i - 1] : 1);
+                }
+            }
+        }
+        
+        return dp[nt - 1]; 
+    }
+};
