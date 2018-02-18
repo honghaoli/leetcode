@@ -54,3 +54,40 @@ public:
         return result;
     }
 };
+
+
+
+
+
+// correct way to do the iterative solution
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> result;
+        if (!root) return result;
+        stack<TreeNode *> stk;
+        stk.push(root);
+        TreeNode *n, *pre = nullptr;
+        while (!stk.empty()) {
+            n = stk.top();
+            // find the left most node child of current node
+            while (n->left) {
+                stk.push(n->left);
+                n = n->left;
+            }
+            while (!stk.empty()) {
+                n = stk.top();
+                if (n->right == nullptr || n->right == pre) {
+                // if right branch is null, current node is the next visit
+                    result.push_back(n->val);
+                    pre = n;
+                    stk.pop();
+                } else {    // if right node is not null, do all the same starting from right node
+                    stk.push(n->right);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+};
