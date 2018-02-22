@@ -110,3 +110,69 @@ private:
  * int param_1 = obj.get(key);
  * obj.put(key,value);
  */
+
+
+
+
+
+// use std::list ad the double-linked list
+class LRUCache {
+public:
+    LRUCache(int capacity) : capacity(capacity), size(0) {
+    }
+    
+    int get(int key) {
+        //debug("before get", key);
+        if (hash.find(key) == hash.end()) return -1;
+        dl.splice(dl.begin(), dl, hash[key]);
+        hash[key] = dl.begin();
+        return hash[key]->second;
+    }
+    
+    void put(int key, int value) {
+        //debug("before put", key);
+        if (hash.find(key) == hash.end()) {
+            // no such item
+            dl.emplace_front(key, value);
+            hash[key] = dl.begin();
+            size++;
+            if (size > capacity) {
+                auto it = dl.end();
+                it--;
+                int idx = it->first;
+                hash.erase(idx);
+                dl.erase(it);
+            }
+        } else {
+            // item already in the list
+            dl.splice(dl.begin(), dl, hash[key]);
+            hash[key] = dl.begin();
+            hash[key]->second = value;
+        }
+        //debug("after put", key);
+    }
+    
+
+private:
+    int capacity;
+    int size;
+    list<pair<int, int>> dl;
+    unordered_map<int, list<pair<int, int>>::iterator> hash;
+    
+    void debug(string str, int key) {
+        cout << str << ": key " << key << endl;
+        cout << "size: " << size << " " << hash.size() << endl;
+        cout << "capacity: " << capacity << endl;
+        for (auto it = dl.begin(); it != dl.end(); it++) {
+            cout << "    : " << it->first << " " << it->second << endl;
+        }
+        cout << endl;
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
