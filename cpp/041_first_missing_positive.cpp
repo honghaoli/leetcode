@@ -48,6 +48,27 @@ private:
 
 
 
+// concise
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        for (int i = 0; i < nums.size(); i++) {
+            int cur = nums[i];
+            while (cur > 0 && cur <= nums.size() && cur != nums[cur - 1]) {
+                int next = nums[cur - 1];
+                nums[cur - 1] = cur;
+                cur = next;
+            }
+        }
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] != i + 1) return i + 1;
+        }
+        return nums.size() + 1;
+    }
+};
+
+
+
 
 
 
