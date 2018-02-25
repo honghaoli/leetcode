@@ -82,3 +82,50 @@ private:
 
 
 };
+
+
+
+
+
+
+
+// more concise and clear version
+class Solution {
+public:
+    // O(1) space.
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int n1 = nums1.size();
+        int n2 = nums2.size();
+        if (n1 + n2 == 0) return 0;
+        // assume n1 <= n2;
+        if (n1 > n2) return findMedianSortedArrays(nums2, nums1);
+
+        // there are total n_i place to insert
+        int lo = 0, hi = n1;
+        int k1, k2;
+        int left1, left2, right1, right2;
+        while (lo <= hi) {
+            k1 = (hi - lo) / 2 + lo;
+            k2 = (n1 + n2) / 2 - k1;    // n1 <= n2 makes k2 always in the range 0 to n2;
+            left1 = (k1 > 0) ? nums1[k1 - 1] : INT_MIN;
+            left2 = (k2 > 0) ? nums2[k2 - 1] : INT_MIN;
+            right1 = (k1 < n1) ? nums1[k1] : INT_MAX;
+            right2 = (k2 < n2) ? nums2[k2] : INT_MAX;
+            if (left1 > right2) {
+                hi = k1 - 1;
+            } else if (right1 < left2) {
+                lo = k1 + 1;
+            } else {
+                break;      // found the correct place.
+            }
+        }
+        //
+        if ((n1 + n2) % 2 == 0) {
+            // even numbers
+            return (max(left1, left2) + min(right1, right2) ) / 2.0;
+        } else {
+            // oddd numbers
+            return min(right1, right2) * 1.0;
+        }
+    }
+};
