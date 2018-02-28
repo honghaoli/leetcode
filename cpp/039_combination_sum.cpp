@@ -23,3 +23,33 @@ public:
         return result;
     }
 };
+
+
+
+
+// concise
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> result;
+        vector<int> path;
+        findFrom(candidates, 0, target, path, result);
+        return result;
+    }
+    
+
+private:
+    void findFrom(vector<int> &candidates, int start, int target, vector<int> &path, vector<vector<int>> &result) {
+        if (target == 0) {
+            result.push_back(path);
+        }
+        if (start >= candidates.size()) return;
+        for (int i = start; i < candidates.size(); i++) {
+            if (target - candidates[i] >= 0) {
+                path.push_back(candidates[i]);
+                findFrom(candidates, i, target - candidates[i], path, result);
+                path.pop_back();
+            }
+        }
+    }
+};

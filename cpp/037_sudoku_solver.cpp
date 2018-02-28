@@ -68,3 +68,82 @@ public:
         return (i / 3) * 3 + (j / 3);
     }
 };
+
+
+
+
+
+
+
+// faster 8ms
+class Solution {
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        col = vector<vector<bool>>(N, vector<bool>(N, false));
+        row = vector<vector<bool>>(N, vector<bool>(N, false));
+        square = vector<vector<bool>>(N, vector<bool>(N, false));
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (board[i][j] == '.') continue;
+                int k = charToInt(board[i][j]);
+                col[j][k - 1] = true;
+                row[i][k - 1] = true;
+                square[toSquare(i * N + j)][k - 1] = true;
+                //cout << i << ", " << j << ", " << toSquare(i * N + j) << ", " << k << endl;
+            }
+        }
+        dfs(board, 0);
+    }
+    
+private:
+    const int N = 9;
+    vector<vector<bool>> col, row, square;
+    
+    int inline charToInt(char c) {
+        return c - '0';
+    }
+    
+    char inline intToChar(int i) {
+        return i + '0';
+    }
+    
+    int inline toCol(int idx) {
+        return idx % N;
+    }
+    
+    int inline toRow(int idx) {
+        return idx / N;
+    }
+    
+    int inline toSquare(int idx) {
+        return (idx / N / 3) * 3 + (idx % N) / 3;
+    }
+    
+    bool dfs(vector<vector<char>> &board, int idx) {
+        if (idx == N * N) return true;
+        
+        int i = toRow(idx);
+        int j = toCol(idx);
+        int s = toSquare(idx);
+        if (board[i][j] != '.')
+            return dfs(board, idx + 1);
+        
+        for (int k = 1; k <= 9; k++) {
+            if (!col[j][k - 1] && !row[i][k - 1] && !square[s][k - 1]) {
+                board[i][j] = intToChar(k);
+                row[i][k - 1] = true;
+                col[j][k - 1] = true;
+                square[s][k - 1] = true;
+                
+                if (dfs(board, idx + 1)) return true;
+                
+                board[i][j] = '.';
+                row[i][k - 1] = false;
+                col[j][k - 1] = false;
+                square[s][k - 1] = false;
+            }
+        }
+        
+        return false;
+    }
+};
