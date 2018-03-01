@@ -100,3 +100,60 @@ private:
     }
 
 };
+
+
+
+
+
+// more concise and clear solution
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> result;
+        if (s.size() == 0 || words.size() == 0 || words[0].size() == 0) return result;
+
+        int nw = words.size();
+        int wl = words[0].size();
+        int ns = s.size();
+        unordered_map<string, int> counts;
+        for (auto &s : words) {
+            if (counts.count(s) > 0) {
+                counts[s]++;
+            } else {
+                counts[s] = 1;
+            }
+        }
+        
+        for (int shift = 0; shift < wl; shift++) {
+            unordered_map<string, int> hash;
+            int count = 0;
+            int start = shift;
+            string right, left;
+            for (int end = shift; end <= ns - wl; end += wl) {
+                right = s.substr(end, wl);
+                if (counts.count(right) == 0) continue;
+                hash[right]++;
+                count++;
+                // remove duplicates
+                while (hash[right] > counts[right] && start < end) {
+                    left = s.substr(start, wl);
+                    if (counts.count(left) > 0) {
+                        hash[left]--;
+                        count--;
+                    }
+                    start += wl;
+                }
+                // remove pre- non words
+                while(counts.count(s.substr(start, wl)) == 0 && start < end) {
+                    start += wl;
+                }
+                // check if it is valid pos
+                if (count == nw && end - start == (nw - 1) * wl) {
+                    result.push_back(start);
+                }
+            }
+        }
+        
+        return result;
+    }
+};
