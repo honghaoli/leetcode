@@ -1,6 +1,7 @@
 class Solution {
 public:
     // solution 1: maintain a minHeap, priority queue, with fixed k items.
+    // time O(nlogk), space O(k)
     int findKthLargest(vector<int>& nums, int k) {
         priority_queue<int, vector<int>, greater<int>> minHeap;
         for (auto &i : nums) {
@@ -25,6 +26,7 @@ class Solution {
 public:
     // quick sort method, select a pivot, divide the array into smaller, equals, larger three part
     // divide and conquer
+    // time O(n), space O(1) or O(logn) for recursion calls
     int findKthLargest(vector<int>& nums, int k) {
         // shuffle is important for quick sort!!
         std::random_device rd;
