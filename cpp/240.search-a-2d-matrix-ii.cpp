@@ -37,3 +37,19 @@ private:
 
 
 // better solution with time O(n + m)
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int m = matrix.size();
+        if (m < 1) return false;
+        int n = matrix[0].size();
+        if (n < 1) return false;
+        int i = 0, j = n - 1;
+        while (i < m && j >= 0) {
+            if (matrix[i][j] == target) return true;
+            else if (matrix[i][j] > target) j--;
+            else if (matrix[i][j] < target) i++;
+        }
+        return false;
+    }
+};
