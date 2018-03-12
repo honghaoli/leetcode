@@ -2,7 +2,8 @@ class TwoSum {
 public:
     /** Initialize your data structure here. */
     TwoSum() {
-        
+        min_ = INT_MAX;
+        max_ = INT_MIN;
     }
     
     /** Add the number to an internal data structure.. */
@@ -12,10 +13,13 @@ public:
         else
             hash[number]++;
         nums.push_back(number);
+        min_ = min(min_, number);
+        max_ = max(max_, number);
     }
     
     /** Find if there exists any pair of numbers which sum is equal to the value. */
     bool find(int value) {
+        if (value < 2 * min_ || value > 2 * max_) return false;
         for (auto &n : nums) {
             if (hash.count(value - n) > 0) 
                 if (value != 2 * n)
@@ -29,6 +33,7 @@ public:
 private:
     unordered_map<int, int> hash;
     vector<int> nums;
+    int min_, max_;
 };
 
 /**
