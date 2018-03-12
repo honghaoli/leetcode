@@ -4,56 +4,51 @@ public:
     MaxStack() {
     }
     
+    // O(log n), sort in map when adding new number;  O(1) for already exist number
     void push(int x) {
-        nums.push(x);
-        addMax(x);
+        nums.push_front(x);
+        // if (hash.count(x) == 0)
+        //     hash[x] = vector<list<int>::iterator>{nums.begin()};
+        // else
+            hash[x].push_back(nums.begin());
     }
     
+    // O(1)
     int pop() {
-        int tmp = top();
-        nums.pop();
-        maxs.pop();
+        int tmp = nums.front();
+        hash[tmp].pop_back();
+        nums.pop_front();
         return tmp;
     }
     
+    // O(1)
     int top() {
-        return nums.top();
+        return nums.front();
     }
     
+    // O(1)
     int peekMax() {
-        return maxs.top();
+        return hash.rbegin()->first;
     }
     
+    // O(1)
     int popMax() {
         int tmp = peekMax();
-        maxs.pop();
 
-        stack<int> t;
-        while (nums.top() != tmp) {
-            t.push(nums.top());
-            nums.pop();
-            maxs.pop();
-        }
-        nums.pop();
-        while (!t.empty()) {
-            nums.push(t.top());
-            addMax(t.top());
-            t.pop();
-        }
+        auto iter = hash[tmp].back();
 
-        return tmp; 
+        hash[tmp].pop_back();
+        // if (hash[tmp].size() == 0)
+            // hash.erase(tmp);
+
+        nums.erase(iter);
+
+        return tmp;
     }
 
 private:
-    stack<int> nums;
-    stack<int> maxs;
-
-    void addMax(int x) {
-        if (maxs.empty() || maxs.top() < x)
-            maxs.push(x);
-        else
-            maxs.push(maxs.top());
-    }
+    list<int> nums;
+    map<int, vector<list<int>::iterator>> hash;
 };
 
 /**
