@@ -7,16 +7,16 @@ public:
     // O(log n), sort in map when adding new number;  O(1) for already exist number
     void push(int x) {
         nums.push_front(x);
-        // if (hash.count(x) == 0)
-        //     hash[x] = vector<list<int>::iterator>{nums.begin()};
-        // else
-            hash[x].push_back(nums.begin());
+        hash[x].push_back(nums.begin());
     }
     
     // O(1)
     int pop() {
         int tmp = nums.front();
         hash[tmp].pop_back();
+        // this is very important since peekMax depends on the key 
+        if (hash[tmp].size() == 0)
+            hash.erase(tmp);
         nums.pop_front();
         return tmp;
     }
@@ -36,12 +36,12 @@ public:
         int tmp = peekMax();
 
         auto iter = hash[tmp].back();
+        nums.erase(iter);
 
         hash[tmp].pop_back();
-        // if (hash[tmp].size() == 0)
-            // hash.erase(tmp);
-
-        nums.erase(iter);
+        // this is very important since peekMax depends on the key 
+        if (hash[tmp].size() == 0)
+            hash.erase(tmp);
 
         return tmp;
     }
