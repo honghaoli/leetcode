@@ -2,6 +2,10 @@ class Solution {
 public:
     vector<string> findRepeatedDnaSequences(string s) {
         pre_set();
+        map['A'] = 0;
+        map['C'] = 1;
+        map['T'] = 2;
+        map['G'] = 3;
         vector<string> result;
         unordered_set<int> dup;
         unordered_set<int> found;
@@ -24,6 +28,7 @@ public:
 private:
     const int R = 4;
     const int kLen = 10;
+    unordered_map<char, int> map;
     int R_SHIFT;
 
     void pre_set() {
@@ -36,13 +41,13 @@ private:
     int hashLen(string &s, int start) {
         int value = 0;
         for (int i = start; i < start + kLen; i++) {
-            value = value * R + s[i];
+            value = value * R + map[s[i]];
         }
         return value;
     }
 
     int inline rollingHash(string &s, int i_add, int pre_hash) {
-        return (pre_hash - s[i_add - kLen] * R_SHIFT) * R + s[i_add];
+        return (pre_hash - map[s[i_add - kLen]] * R_SHIFT) * R + map[s[i_add]];
     }
 
 };
