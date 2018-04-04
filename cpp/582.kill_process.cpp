@@ -2,6 +2,7 @@ class Solution {
 public:
     vector<int> killProcess(vector<int>& pid, vector<int>& ppid, int kill) {
         // store parent, children hashmap
+        unordered_map<int, vector<int>> children;
         for (int i = 0; i < pid.size(); i++) {
             if (children.count(ppid[i]) == 0) {
                 children[ppid[i]] = vector<int>{pid[i]};
@@ -10,25 +11,16 @@ public:
             }
         }
         // find all the children
-        unordered_set<int> kills;
-        stack<int> toKill;
+        vector<int> kills;
+        queue<int> toKill;
         toKill.push(kill);
         while (!toKill.empty()) {
-            int k = toKill.top();
+            int k = toKill.front();
             toKill.pop();
-            if (kills.count(k) == 0)
-                kills.insert(k);
+            kills.push_back(k);
             for (auto &i : children[k])
                 toKill.push(i);
         }
-        // convert to vector
-        vector<int> result;
-        for (auto iter = kills.begin(); iter != kills.end(); iter++) {
-            result.push_back(*iter);
-        }
-        return result;
+        return kills;
     }
-
-private:
-    unordered_map<int, vector<int>> children;
 };
