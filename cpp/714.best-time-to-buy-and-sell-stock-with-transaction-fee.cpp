@@ -1,5 +1,4 @@
 // lol: this is the most important part to make your runtime beats others!
-// hahahhahaha
 static int x = []() { std::ios::sync_with_stdio(false); cin.tie(NULL); return 0; }();
 
 class Solution {
