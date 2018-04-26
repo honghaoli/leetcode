@@ -11,26 +11,21 @@ class Solution {
 public:
     vector<Interval> merge(vector<Interval>& intervals) {
         if (intervals.size() <= 1) return intervals;
-        
-        auto compare = [](Interval &v1, Interval &v2) -> bool { return v1.start < v2.start; };
-        sort(intervals.begin(), intervals.end(), compare);
-        
         vector<Interval> result;
-        int start = intervals[0].start;
-        int end = intervals[0].end;
+        auto small = [](Interval &i1, Interval &i2) { return i1.start < i2.start; };
+        sort(intervals.begin(), intervals.end(), small);
+        Interval prev = intervals[0];
         for (int i = 1; i < intervals.size(); i++) {
-            Interval &v = intervals[i];
-            if (v.start <= end) {
-                end = max(end, v.end);
+            Interval curr = intervals[i];
+            if (curr.start <= prev.end) {
+                prev.end = max(curr.end, prev.end);
             } else {
-                result.push_back(Interval(start, end));
-                start = v.start;
-                end = v.end;
+                result.push_back(prev);
+                prev = curr;
             }
         }
-        // the last interval
-        result.push_back(Interval(start, end));            
-
+        
+        result.push_back(prev);
         return result;
     }
 };
