@@ -5,11 +5,8 @@ public:
     }
     
     void addEdge(char from, char to) {
-        //V.insert(from);
-        //V.insert(to);
         if (from != to) {
             E[from].insert(to);
-            cout << from << " -> " << to << endl;            
         }
     }
 
@@ -63,7 +60,7 @@ public:
     string alienOrder(vector<string>& words) {
         Graph G = Graph();
         buildVertices(G, words);
-        buildGraph(G, words, 0, words.size() - 1, 0);
+        buildGraph(G, words);
         G.topologicalSort();
         return G.sortResult();
     }
@@ -78,31 +75,17 @@ private:
         }
     }
     
-    void buildGraph(Graph &G, vector<string> &words, int start, int end, int index) {
-        if (start >= end) return;   // only one word, nothing to compare
-        // remove the word if the compared index is the end of the word
-        if (index >= words[start].size()) {
-            buildGraph(G, words, start + 1, end, index);
-            return;
-        }
-        //
-        int i = start;
-        char c1 = words[i][index];
-        while (++i <= end) {
-            char c2 = words[i][index];
-            if (c2 != c1) {
-                // cout << start << ", " << i << ", " << index << endl;
-                G.addEdge(c1, c2);
-                buildGraph(G, words, start, i - 1, index + 1);
-                start = i;
-                break;
+    void buildGraph(Graph &G, vector<string> &words) {
+        for (int i = 0; i < words.size() - 1; i++) {
+            int len = min(words[i].size(), words[i + 1].size());
+            for (int j = 0; j < len; j++) {
+                char c1 = words[i][j];
+                char c2 = words[i + 1][j];
+                if (c2 != c1) {
+                    G.addEdge(c1, c2);
+                    break;
+                }
             }
         }
-        if (i >= end && start < end)
-            buildGraph(G, words, start, end, index + 1);
-        else
-            buildGraph(G, words, start, end, index);
-
-
     }
 };
