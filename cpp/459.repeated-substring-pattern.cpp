@@ -1,6 +1,11 @@
 static int x = []() { std::ios::sync_with_stdio(false); cin.tie(NULL); return 0; }();
 
 
+// one line solution:
+//        return (s + s).find(s, 1) < s.size();
+
+
+
 class Solution {
 public:
     bool repeatedSubstringPattern(string s) {
