@@ -1,3 +1,58 @@
+// use binary index tree
+class NumArray {
+public:
+    NumArray(vector<int> nums) {
+        N = nums.size();
+        bitree_ = vector<int>(N + 1, 0);
+        nums_ = vector<int>(N, 0);
+        for (int i = 0; i < N; ++i) {
+            update(i, nums[i]);
+        }
+    }
+    
+    void update(int i, int val) {
+        int diff = val - nums_[i];
+        nums_[i] = val;
+        ++i;
+        for ( ; i <= N; i += (i & -i)) {
+            bitree_[i] += diff;
+        }
+        // print_tree();
+    }
+    
+    int sumRange(int i, int j) {
+        return sumPrefix(j) - sumPrefix(i - 1);
+    }
+
+private:
+    int N;
+    vector<int> nums_;
+    vector<int> bitree_;
+
+    int sumPrefix(int i) {
+        int sum = 0;
+        ++i;
+        for ( ; i > 0; i -= (i & -i)) {
+            sum += bitree_[i];
+        }
+        return sum;
+    }
+    
+    void print_tree() {
+        for (int i : bitree_) {
+            cout << i << ", ";
+        }
+        cout << endl;
+    }
+};
+
+
+
+
+
+
+
+
 // use array representation of segment tree
 class NumArray {
 public:
