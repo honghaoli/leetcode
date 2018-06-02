@@ -1,3 +1,59 @@
+// 2D binary index tree
+class NumMatrix {
+public:
+    NumMatrix(vector<vector<int>> matrix) {
+        N = matrix.size();
+        if (N == 0) return;
+        M = matrix.at(0).size();
+        if (M == 0) return;
+        tree_ = vector<vector<int>>(N + 1, vector<int>(M + 1, 0));
+        matrix_ = vector<vector<int>>(N, vector<int>(M, 0));
+        for (int i = 0; i < N; ++i) {
+            for (int j = 0; j < M; ++j) {
+                update(i, j, matrix[i][j]);
+            }
+        }
+    }
+    
+    void update(int row, int col, int val) {
+        int diff = val - matrix_[row][col];
+        matrix_[row][col] = val;
+        for (int i = row + 1; i <= N; i += (i & -i)) {
+            for (int j = col + 1; j <= M; j += (j & -j)) {
+                tree_[i][j] += diff;
+            }
+        }
+    }
+    
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        return sum(row2, col2) + sum(row1 - 1, col1 - 1) - sum(row2, col1 - 1) - sum(row1 - 1, col2);
+    }
+
+private:
+    int N, M;
+    vector<vector<int>> matrix_;
+    vector<vector<int>> tree_;
+
+    // sum upper left corner ends at (row, col)
+    int sum(int row, int col) {
+        int sum = 0;
+        for (int i = row + 1; i > 0; i -= (i & -i)) {
+            for (int j = col + 1; j > 0; j -= (j & -j)) {
+                sum += tree_[i][j];
+            }
+        }
+        return sum;
+    }
+};
+
+
+
+
+
+
+
+
+// 2D segment tree
 class NumMatrix {
 public:
     NumMatrix(vector<vector<int>> matrix) {
