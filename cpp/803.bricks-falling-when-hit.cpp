@@ -1,6 +1,105 @@
 static int x = []() { std::ios::sync_with_stdio(false); cin.tie(NULL); return 0; }();
 
+// directly do dfs/bfs every time when connect some bricks.
+// still do it reversely
+// first walk through all hits, if gird[i][j] == 0, then change it to -1; if == 1, change to 0.
+// then walk back through hits reversely, dfs/bfs to connect each part everytime.
+class Solution {
+public:
+    vector<int> hitBricks(vector<vector<int>>& grid, vector<vector<int>>& hits) {
+        // boundary check
+        if (grid.size() == 0 || grid.at(0).size() == 0) return vector<int>(hits.size(), 0);
+        N = grid.size();
+        M = grid.at(0).size();
+        // first walk through all hits, if gird[i][j] == 0, then change it to -1; if == 1, change to 0.
+        for (auto &h : hits) {
+            int &site = grid[h.at(0)][h.at(1)];
+            if (site == 0)
+                site = -1;
+            else if (site == 1)
+                site = 0;
+        }
 
+        // initial calculate how many left
+        visited = vector<vector<bool>>(N, vector<bool>(M, false));
+        num_attached = 0;
+        for (int j = 0; j < M; ++j) {
+            if (grid[0][j] == 1 && !visited[0][j]) {
+                dfs(grid, 0, j);
+            }
+        }
+        // cout << num_attached << endl;
+
+        // start to walk back throught all hits
+        vector<int> result;
+        reverse(hits.begin(), hits.end());
+        for (auto &h : hits) {
+            int prev_num = num_attached;
+            int &site = grid[h.at(0)][h.at(1)];
+            if (site == 0) {
+                site = 1;
+                dfs(grid, h.at(0), h.at(1));
+            }
+            // cout << num_attached << endl;
+            // if current added one is not connected to top, then it's zero, not -1.
+            result.push_back(max(0, num_attached - prev_num - 1));
+        }
+
+        reverse(result.begin(), result.end());
+        return result;
+    }
+
+private:
+    int N, M;
+    int num_attached;
+    vector<vector<bool>> visited;
+
+    void dfs(vector<vector<int>> &grid, int i, int j) {
+        // cout << "visit: " << i << ", " << j << endl;
+        bool connected = false;
+        // if connected to top
+        if (i == 0) {
+            connected = true;
+        } else {
+            for (auto &p : neighbor(grid, i, j)) {
+                if (visited[p.first][p.second]) {
+                    connected = true;
+                    break;
+                }
+            }
+        }
+        if (connected) {
+            // if neighbor is connected to top, count this one
+            visited[i][j] = true;
+            ++num_attached;
+            for (auto &p : neighbor(grid, i, j)) {
+                if (!visited[p.first][p.second]) {
+                    dfs(grid, p.first, p.second);
+                }
+            }
+        }
+    }
+
+    const vector<int> dx {0, -1, 0, 1};
+    const vector<int> dy {-1, 0, 1, 0};
+    vector<pair<int, int>> neighbor(vector<vector<int>> &grid, int i, int j) {
+        vector<pair<int, int>> result;
+        for (int k = 0; k < 4; ++k) {
+            int x = i + dx[k];
+            int y = j + dy[k];
+            if (x >= 0 && x < N && y >= 0 && y < M && grid[x][y] == 1)
+                result.push_back({x, y});
+        }
+        return result;
+    }
+};
+
+
+
+
+
+
+// longer solution
 // reverse the hits sequence, then it is a classical union-find problem.
 class Solution {
 public:
