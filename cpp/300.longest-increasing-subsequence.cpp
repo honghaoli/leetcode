@@ -37,3 +37,28 @@ public:
         return L;
     }
 };
+
+
+
+
+
+// DP 
+// O(n^2)
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        if (nums.size() <= 1) return nums.size();
+        // dp[i]: the longest length ending at index i
+        vector<int> dp(nums.size(), 1);
+        int max_length = 1;
+        for (int end = 0; end < nums.size(); ++end) {
+            for (int i = end - 1; i >= 0; --i) {
+                if (nums[i] < nums[end]) {
+                    dp[end] = max(dp[end], dp[i] + 1);
+                    max_length = max(dp[end], max_length);
+                }
+            }
+        }
+        return max_length;
+    }
+};
