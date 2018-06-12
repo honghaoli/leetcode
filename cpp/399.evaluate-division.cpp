@@ -33,7 +33,10 @@ private:
             return -1.0;    // no vertex found in the graph.
         if (from == to)
             return 1.0;     // the same vertex;
+        if (table.count(from) != 0 && table[from].count(to) != 0)
+            return table[from][to];
         auto copy = visited;
+        // cout << "find: " << from << ", " << to << endl;
         return dfs(from, to, copy);
     }
 
@@ -41,12 +44,14 @@ private:
         visited[from] = true;
         if (from == to) return 1.0;
         for (auto iter = table[from].begin(); iter != table[from].end(); iter++) {
-            if (visited[iter->first]) continue;     // already visited;
+            if (visited[iter->first] || table[from][iter->first] < 0) continue;     // already visited;
             double result = dfs(iter->first, to, visited);
-            if (result > 0)
-                return result * table[from][iter->first];
+            if (result > 0) {
+                // return result * table[from][iter->first];
+                table[from][to] = result * table[from][iter->first];
+                return table[from][to];
+            }
         }
         return -1.0;
     }
 };
-
